@@ -1,20 +1,25 @@
 import { motion } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import heroBg from "@/assets/hero-bg.jpg";
+import crestLogo from "@/assets/crest-logo.png";
 import GlitchText from "./GlitchText";
 import TechHUD from "./TechHUD";
+import CosmicBackground from "./CosmicBackground";
 
 const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden snap-section">
+      {/* Cosmic Background */}
+      <CosmicBackground />
+      
       {/* Background image with dark overlay */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30"
         style={{ backgroundImage: `url(${heroBg})` }}
       />
       
       {/* Radial gradient overlay for depth */}
-      <div className="absolute inset-0 bg-background/80" />
+      <div className="absolute inset-0 bg-background/60" />
       <div className="absolute inset-0 bg-radial-gradient" />
       
       {/* Tech HUD elements */}
@@ -65,23 +70,21 @@ const HeroSection = () => {
             transition={{ duration: 1.2, ease: "easeOut" }}
           >
             <motion.div
-              className="relative w-28 h-28 md:w-40 md:h-40 mx-auto preserve-3d"
+              className="relative w-32 h-32 md:w-48 md:h-48 mx-auto preserve-3d"
               animate={{ 
                 y: [-10, 10, -10],
                 rotateY: [0, 5, 0, -5, 0]
               }}
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             >
-              {/* CREST Logo */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-crest-red via-crest-yellow to-crest-blue p-1">
-                <div className="w-full h-full rounded-xl bg-background flex items-center justify-center">
-                  <span className="font-display text-4xl md:text-6xl font-black bg-gradient-to-br from-crest-red via-crest-yellow to-crest-blue bg-clip-text text-transparent">
-                    C
-                  </span>
-                </div>
-              </div>
+              {/* CREST Logo Image */}
+              <img 
+                src={crestLogo} 
+                alt="CREST Logo" 
+                className="w-full h-full object-contain drop-shadow-[0_0_30px_hsl(var(--crest-blue)/0.5)]"
+              />
               {/* Glow effect */}
-              <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-crest-red/30 via-crest-yellow/30 to-crest-blue/30 blur-xl -z-10 animate-pulse-glow" />
+              <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-crest-red/20 via-crest-yellow/20 to-crest-blue/20 blur-xl -z-10 animate-pulse-glow" />
             </motion.div>
           </motion.div>
 
@@ -108,12 +111,21 @@ const HeroSection = () => {
 
           {/* Subtitle */}
           <motion.p
-            className="font-display text-base md:text-xl text-muted-foreground tracking-widest mb-12"
+            className="font-display text-sm md:text-lg text-muted-foreground tracking-widest mb-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            FEBRUARY 2025 | LPU CAMPUS | ASSEMBLE YOUR SQUAD
+            Beyond the Blip. Reclaim the Timeline, Secure Your Legacy.
+          </motion.p>
+
+          <motion.p
+            className="font-display text-xs md:text-sm text-tactical-blue tracking-[0.3em] mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.7 }}
+          >
+            FEBRUARY 2025 | 24-HOUR TECHNICAL SHOWDOWN | LPU CAMPUS
           </motion.p>
 
           {/* CTA Buttons */}
@@ -124,18 +136,19 @@ const HeroSection = () => {
             transition={{ duration: 0.8, delay: 0.8 }}
           >
             <motion.button
-              className="px-8 py-4 bg-gradient-to-r from-crest-red to-crest-yellow font-display font-bold text-base md:text-lg tracking-wider rounded-lg glow-red transition-all duration-300"
+              className="group px-8 py-4 bg-gradient-to-r from-crest-red to-crest-yellow font-display font-bold text-base md:text-lg tracking-wider rounded-lg glow-red transition-all duration-300 flex items-center justify-center gap-2"
               whileHover={{ scale: 1.05, boxShadow: "0 0 50px hsl(0 100% 50% / 0.6)" }}
               whileTap={{ scale: 0.98 }}
             >
               REGISTER NOW
+              <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </motion.button>
             <motion.button
-              className="px-8 py-4 glass-card font-display font-bold text-base md:text-lg tracking-wider text-foreground hover:bg-glass-border transition-all duration-300"
+              className="px-8 py-4 glass-card font-display font-bold text-base md:text-lg tracking-wider text-foreground hover:bg-glass-border transition-all duration-300 border border-tactical-blue/30 hover:border-tactical-blue"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
             >
-              LEARN MORE
+              PROCEED TO BRIEFING
             </motion.button>
           </motion.div>
         </div>
