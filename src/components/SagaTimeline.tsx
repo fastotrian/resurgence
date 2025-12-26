@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
-import { Swords, Infinity as InfinityIcon, Hand } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Swords, Infinity as InfinityIcon, Hand, AlertTriangle } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 interface Round {
@@ -55,6 +55,34 @@ const rounds: Round[] = [
   },
 ];
 
+// TVA TemPad style ticker
+const TVATicker = ({ activeStep }: { activeStep: number }) => {
+  const [tickerValue, setTickerValue] = useState("0000.0000.0000");
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const newValue = Array(3)
+        .fill(0)
+        .map(() => Math.floor(Math.random() * 10000).toString().padStart(4, '0'))
+        .join('.');
+      setTickerValue(newValue);
+    }, 150);
+    
+    return () => clearInterval(interval);
+  }, []);
+  
+  return (
+    <motion.div
+      className="absolute top-4 right-4 font-mono text-[10px] text-crest-yellow/80 flex items-center gap-2"
+      animate={{ opacity: [0.5, 1, 0.5] }}
+      transition={{ duration: 0.5, repeat: Infinity }}
+    >
+      <AlertTriangle className="w-3 h-3" />
+      <span className="tracking-widest">TVA-{tickerValue}</span>
+    </motion.div>
+  );
+};
+
 const TimelineNode = ({ 
   round, 
   isActive, 
@@ -76,7 +104,7 @@ const TimelineNode = ({
         animate={{
           scale: isActive ? 1.3 : 1,
         }}
-        transition={{ type: "tween", duration: 0.3 }}
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
         className={`relative w-14 h-14 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
           isActive 
             ? 'bg-crest-yellow border-foreground shadow-[0_0_20px_5px_rgba(255,215,0,0.8)]' 
@@ -124,6 +152,13 @@ const SagaTimeline = () => {
         }} 
       />
       
+      {/* Moving Scan Line */}
+      <motion.div
+        className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-crest-yellow to-transparent pointer-events-none z-20"
+        animate={{ top: ['0%', '100%'] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+      />
+      
       {/* Scanline overlay */}
       <motion.div
         className="absolute inset-0 pointer-events-none"
@@ -163,6 +198,9 @@ const SagaTimeline = () => {
         <div className="relative w-full max-w-5xl mx-auto mb-12">
           <div className="relative h-40 flex justify-between items-center px-8 md:px-16">
             
+            {/* TVA Ticker */}
+            <TVATicker activeStep={activeStep} />
+            
             {/* The Base Timeline SVG */}
             <svg className="absolute inset-0 w-full h-full overflow-visible pointer-events-none">
               {/* Main Golden Path */}
@@ -190,24 +228,42 @@ const SagaTimeline = () => {
                 transition={{ duration: 2, ease: "easeOut" }}
               />
               
-              {/* Branching Lines - Red variant (visible on Round 2+) */}
+              {/* Branching filaments (visible on Round 2+) */}
               <AnimatePresence>
                 {activeStep >= 1 && (
-                  <motion.path
-                    initial={{ opacity: 0, pathLength: 0 }}
-                    animate={{ opacity: 0.6, pathLength: 1 }}
-                    exit={{ opacity: 0, pathLength: 0 }}
-                    transition={{ duration: 0.8 }}
-                    d="M 400 80 Q 500 20, 700 10"
-                    fill="transparent"
-                    stroke="hsl(0 100% 50%)"
-                    strokeWidth="2"
-                    strokeDasharray="8,4"
-                  />
+                  <>
+                    {/* Main branch */}
+                    <motion.path
+                      initial={{ opacity: 0, pathLength: 0 }}
+                      animate={{ opacity: 0.6, pathLength: 1 }}
+                      exit={{ opacity: 0, pathLength: 0 }}
+                      transition={{ duration: 0.8 }}
+                      d="M 400 80 Q 500 20, 700 10"
+                      fill="transparent"
+                      stroke="hsl(0 100% 50%)"
+                      strokeWidth="2"
+                      strokeDasharray="8,4"
+                    />
+                    {/* Smaller filaments */}
+                    {[...Array(3)].map((_, i) => (
+                      <motion.path
+                        key={`filament-${i}`}
+                        initial={{ opacity: 0, pathLength: 0 }}
+                        animate={{ opacity: 0.3, pathLength: 1 }}
+                        exit={{ opacity: 0, pathLength: 0 }}
+                        transition={{ duration: 0.5, delay: i * 0.1 }}
+                        d={`M 400 80 Q ${450 + i * 30} ${40 - i * 10}, ${550 + i * 50} ${30 - i * 15}`}
+                        fill="transparent"
+                        stroke="hsl(0 100% 50%)"
+                        strokeWidth="1"
+                        strokeDasharray="4,4"
+                      />
+                    ))}
+                  </>
                 )}
               </AnimatePresence>
               
-              {/* Branching Lines - Cyan variant (visible on Round 3) */}
+              {/* Nexus branches (visible on Round 3) */}
               <AnimatePresence>
                 {activeStep >= 2 && (
                   <>
@@ -221,6 +277,21 @@ const SagaTimeline = () => {
                       stroke="hsl(180 100% 50%)"
                       strokeWidth="2"
                     />
+                    {/* More filaments */}
+                    {[...Array(4)].map((_, i) => (
+                      <motion.path
+                        key={`nexus-${i}`}
+                        initial={{ opacity: 0, pathLength: 0 }}
+                        animate={{ opacity: 0.4, pathLength: 1 }}
+                        exit={{ opacity: 0, pathLength: 0 }}
+                        transition={{ duration: 0.5, delay: 0.3 + i * 0.1 }}
+                        d={`M 400 80 Q ${480 + i * 25} ${110 + i * 10}, ${600 + i * 40} ${130 + i * 15}`}
+                        fill="transparent"
+                        stroke="hsl(180 100% 50%)"
+                        strokeWidth="1"
+                        strokeDasharray="3,3"
+                      />
+                    ))}
                     {/* Nexus pulse at intersection */}
                     <motion.circle
                       cx="400"
@@ -269,14 +340,14 @@ const SagaTimeline = () => {
             initial={{ opacity: 0, y: 30, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, type: "spring", stiffness: 100 }}
           >
             {(() => {
               const round = rounds[activeStep];
               const Icon = round.icon;
               
               return (
-                <div className="glass-card p-8 md:p-12 relative overflow-hidden border border-crest-yellow/20">
+                <div className="glass-card p-8 md:p-12 relative overflow-hidden border border-crest-yellow/20 backdrop-blur-2xl bg-background/5">
                   {/* Animated border glow */}
                   <motion.div
                     className="absolute inset-0 rounded-xl pointer-events-none"
