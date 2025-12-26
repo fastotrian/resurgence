@@ -13,6 +13,7 @@ interface Round {
   accentColorClass: string;
   accentBgClass: string;
   features: string[];
+  effect: "civilwar" | "infinity" | "endgame";
 }
 
 const rounds: Round[] = [
@@ -27,6 +28,7 @@ const rounds: Round[] = [
     accentColorClass: "text-crest-red",
     accentBgClass: "bg-crest-red/20",
     features: ["1v1 Code Battles", "Algorithm Showdown", "Speed Debugging"],
+    effect: "civilwar",
   },
   {
     id: 2,
@@ -39,6 +41,7 @@ const rounds: Round[] = [
     accentColorClass: "text-crest-yellow",
     accentBgClass: "bg-crest-yellow/20",
     features: ["Full Stack Sprint", "Integration Challenge", "The Snap Elimination"],
+    effect: "infinity",
   },
   {
     id: 3,
@@ -51,8 +54,115 @@ const rounds: Round[] = [
     accentColorClass: "text-crest-green",
     accentBgClass: "bg-crest-green/20",
     features: ["24-Hour Grand Finale", "Industry Jury", "The Gauntlet Award"],
+    effect: "endgame",
   },
 ];
+
+// Civil War diagonal split effect
+const CivilWarEffect = () => (
+  <div className="absolute inset-0 overflow-hidden rounded-xl pointer-events-none">
+    {/* Red diagonal */}
+    <motion.div
+      className="absolute -left-1/2 top-0 w-full h-full bg-gradient-to-r from-crest-red/30 to-transparent"
+      style={{ transform: "skewX(-15deg)" }}
+      animate={{ x: [-20, 0, -20] }}
+      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+    />
+    {/* Blue diagonal */}
+    <motion.div
+      className="absolute -right-1/2 top-0 w-full h-full bg-gradient-to-l from-crest-blue/30 to-transparent"
+      style={{ transform: "skewX(15deg)" }}
+      animate={{ x: [20, 0, 20] }}
+      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+    />
+    {/* Scanning line */}
+    <motion.div
+      className="absolute left-0 right-0 h-0.5 bg-foreground/20"
+      animate={{ top: ["0%", "100%", "0%"] }}
+      transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+    />
+  </div>
+);
+
+// Infinity War stardust effect
+const InfinityEffect = () => (
+  <div className="absolute inset-0 overflow-hidden rounded-xl pointer-events-none">
+    {/* Pulsing purple/gold border */}
+    <motion.div
+      className="absolute inset-0 rounded-xl"
+      style={{
+        background: "linear-gradient(135deg, hsl(280, 70%, 50%) 0%, hsl(48, 96%, 53%) 100%)",
+        opacity: 0.2,
+      }}
+      animate={{ opacity: [0.1, 0.3, 0.1] }}
+      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+    />
+    {/* Stardust particles */}
+    {Array.from({ length: 15 }).map((_, i) => (
+      <motion.div
+        key={i}
+        className="absolute w-1 h-1 bg-crest-yellow rounded-full"
+        style={{
+          left: `${Math.random() * 100}%`,
+          top: `${Math.random() * 100}%`,
+        }}
+        animate={{
+          opacity: [0, 1, 0],
+          scale: [0, 1.5, 0],
+        }}
+        transition={{
+          duration: 2 + Math.random() * 2,
+          delay: Math.random() * 2,
+          repeat: Infinity,
+        }}
+      />
+    ))}
+  </div>
+);
+
+// Endgame glitch effect
+const EndgameEffect = () => (
+  <div className="absolute inset-0 overflow-hidden rounded-xl pointer-events-none">
+    {/* RGB Chromatic aberration */}
+    <motion.div
+      className="absolute inset-0 mix-blend-screen"
+      animate={{
+        boxShadow: [
+          "inset 2px 0 0 hsl(0, 100%, 50% / 0.3), inset -2px 0 0 hsl(200, 100%, 50% / 0.3)",
+          "inset -2px 0 0 hsl(0, 100%, 50% / 0.3), inset 2px 0 0 hsl(200, 100%, 50% / 0.3)",
+          "inset 2px 0 0 hsl(0, 100%, 50% / 0.3), inset -2px 0 0 hsl(200, 100%, 50% / 0.3)",
+        ],
+      }}
+      transition={{ duration: 0.2, repeat: Infinity }}
+    />
+    {/* Glitch flicker */}
+    <motion.div
+      className="absolute inset-0 bg-foreground/5"
+      animate={{ opacity: [0, 0.1, 0, 0.05, 0] }}
+      transition={{ duration: 0.5, repeat: Infinity, times: [0, 0.1, 0.2, 0.3, 1] }}
+    />
+    {/* Horizontal glitch lines */}
+    <motion.div
+      className="absolute left-0 right-0 h-1 bg-teal-500/30"
+      animate={{ 
+        top: ["20%", "80%", "40%", "60%", "20%"],
+        scaleX: [1, 0.8, 1, 0.9, 1],
+      }}
+      transition={{ duration: 2, repeat: Infinity }}
+    />
+  </div>
+);
+
+const getEffect = (effect: Round["effect"]) => {
+  switch (effect) {
+    case "civilwar":
+      return <CivilWarEffect />;
+    case "infinity":
+      return <InfinityEffect />;
+    case "endgame":
+      return <EndgameEffect />;
+  }
+};
 
 const SagaTimeline = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -64,7 +174,7 @@ const SagaTimeline = () => {
   const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   return (
-    <section ref={containerRef} className="py-24 px-4 relative overflow-hidden">
+    <section ref={containerRef} className="py-24 px-4 relative overflow-hidden min-h-screen">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/20 to-background" />
       
@@ -77,6 +187,15 @@ const SagaTimeline = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
+          <motion.span 
+            className="font-display text-xs tracking-[0.4em] text-tactical-blue mb-4 block"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
+            PHASE 3: THE THREE ROUNDS
+          </motion.span>
           <h2 className="font-display text-3xl md:text-5xl font-black tracking-wider mb-4">
             <span className="text-foreground">THE THREE-STAGE</span>{" "}
             <span className="text-crest-yellow">SAGA</span>
@@ -125,40 +244,42 @@ const SagaTimeline = () => {
 
                   {/* Content */}
                   <div className={`ml-16 md:ml-0 md:w-1/2 ${isEven ? "md:pr-16" : "md:pl-16"}`}>
-                    <div className="glass-card p-8 relative overflow-hidden group">
-                      {/* Background gradient on hover */}
-                      <div className={`absolute inset-0 bg-gradient-to-br ${round.gradientClass} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
+                    <div className="glass-card p-8 relative overflow-hidden group hover:border-white/20 transition-all duration-500">
+                      {/* Special effect based on round */}
+                      {getEffect(round.effect)}
                       
-                      {/* Round number */}
-                      <span className={`font-display text-sm tracking-widest ${round.accentColorClass}`}>
-                        {round.subtitle}
-                      </span>
-                      
-                      {/* Title */}
-                      <h3 className={`font-display text-3xl md:text-4xl font-black bg-gradient-to-r ${round.gradientClass} bg-clip-text text-transparent mt-2 mb-1`}>
-                        {round.title}
-                      </h3>
-                      
-                      {/* Theme */}
-                      <p className="font-display text-sm tracking-wider text-muted-foreground mb-4">
-                        {round.theme}
-                      </p>
-                      
-                      {/* Description */}
-                      <p className="text-foreground/80 mb-6">
-                        {round.description}
-                      </p>
-                      
-                      {/* Features */}
-                      <div className="flex flex-wrap gap-2">
-                        {round.features.map((feature) => (
-                          <span
-                            key={feature}
-                            className={`px-3 py-1 text-xs font-display tracking-wider ${round.accentBgClass} ${round.accentColorClass} rounded-full`}
-                          >
-                            {feature}
-                          </span>
-                        ))}
+                      <div className="relative z-10">
+                        {/* Round number */}
+                        <span className={`font-display text-sm tracking-widest ${round.accentColorClass}`}>
+                          {round.subtitle}
+                        </span>
+                        
+                        {/* Title */}
+                        <h3 className={`font-display text-3xl md:text-4xl font-black bg-gradient-to-r ${round.gradientClass} bg-clip-text text-transparent mt-2 mb-1`}>
+                          {round.title}
+                        </h3>
+                        
+                        {/* Theme */}
+                        <p className="font-display text-sm tracking-wider text-muted-foreground mb-4">
+                          {round.theme}
+                        </p>
+                        
+                        {/* Description */}
+                        <p className="text-foreground/80 mb-6">
+                          {round.description}
+                        </p>
+                        
+                        {/* Features */}
+                        <div className="flex flex-wrap gap-2">
+                          {round.features.map((feature) => (
+                            <span
+                              key={feature}
+                              className={`px-3 py-1 text-xs font-display tracking-wider ${round.accentBgClass} ${round.accentColorClass} rounded-full`}
+                            >
+                              {feature}
+                            </span>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
