@@ -129,12 +129,11 @@ const EndgameEffect = () => (
       className="absolute inset-0 mix-blend-screen"
       animate={{
         boxShadow: [
-          "inset 2px 0 0 hsl(0, 100%, 50% / 0.3), inset -2px 0 0 hsl(200, 100%, 50% / 0.3)",
-          "inset -2px 0 0 hsl(0, 100%, 50% / 0.3), inset 2px 0 0 hsl(200, 100%, 50% / 0.3)",
-          "inset 2px 0 0 hsl(0, 100%, 50% / 0.3), inset -2px 0 0 hsl(200, 100%, 50% / 0.3)",
+          "inset 2px 0 0 hsl(var(--crest-red) / 0.3), inset -2px 0 0 hsl(var(--tactical-blue) / 0.3)",
+          "inset -2px 0 0 hsl(var(--crest-red) / 0.3), inset 2px 0 0 hsl(var(--tactical-blue) / 0.3)",
         ],
       }}
-      transition={{ duration: 0.2, repeat: Infinity }}
+      transition={{ type: "tween", duration: 0.2, repeat: Infinity, repeatType: "mirror", ease: "linear" }}
     />
     {/* Glitch flicker */}
     <motion.div
