@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, Instagram, Twitter, Linkedin } from "lucide-react";
-
+import crestLogoDark from "@/assets/crest-logo-dark.png";
 const Footer = () => {
   return (
     <footer className="py-16 px-4 relative overflow-hidden border-t border-border">
@@ -11,13 +11,11 @@ const Footer = () => {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-crest-red via-crest-yellow to-crest-blue p-0.5">
-                <div className="w-full h-full rounded-lg bg-background flex items-center justify-center">
-                  <span className="font-display text-2xl font-black bg-gradient-to-br from-crest-red to-crest-blue bg-clip-text text-transparent">
-                    C
-                  </span>
-                </div>
-              </div>
+              <img 
+                src={crestLogoDark} 
+                alt="CREST Logo" 
+                className="w-14 h-14 object-contain"
+              />
               <div>
                 <span className="font-display text-xl font-bold tracking-wider text-foreground block">
                   CREST

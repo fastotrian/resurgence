@@ -49,8 +49,15 @@ const GlitchText = ({ fromText, toText, className = "" }: GlitchTextProps) => {
             key="from"
             className="relative inline-block glitch-text"
             initial={{ opacity: 1 }}
-            exit={{ opacity: 0, scale: 1.2, filter: "blur(8px)" }}
-            transition={{ duration: 0.5 }}
+            exit={{ 
+              opacity: 0, 
+              scale: 1.1,
+              y: -20
+            }}
+            transition={{ 
+              duration: 0.8, 
+              ease: [0.25, 0.46, 0.45, 0.94]
+            }}
           >
             {fromText}
             {/* Glitch layers */}
@@ -61,32 +68,61 @@ const GlitchText = ({ fromText, toText, className = "" }: GlitchTextProps) => {
           <motion.span
             key="to"
             className="inline-block bg-gradient-to-r from-crest-red via-crest-yellow to-crest-green bg-clip-text text-transparent"
-            initial={{ opacity: 0, scale: 0.8, filter: "blur(8px)" }}
-            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-            transition={{ duration: 0.6, delay: 0.3 }}
+            initial={{ 
+              opacity: 0, 
+              scale: 0.9,
+              y: 30
+            }}
+            animate={{ 
+              opacity: 1, 
+              scale: 1,
+              y: 0
+            }}
+            transition={{ 
+              duration: 0.9, 
+              delay: 0.2,
+              ease: [0.25, 0.46, 0.45, 0.94]
+            }}
           >
-            {toText}
+            {/* Letter-by-letter animation */}
+            {toText.split('').map((char, i) => (
+              <motion.span
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ 
+                  duration: 0.4,
+                  delay: 0.3 + i * 0.03,
+                  ease: "easeOut"
+                }}
+              >
+                {char}
+              </motion.span>
+            ))}
           </motion.span>
         )}
       </AnimatePresence>
       
-      {/* Disintegrating particles */}
+      {/* Smoother disintegrating particles */}
       <AnimatePresence>
         {particles.map((particle) => (
           <motion.span
             key={particle.id}
             className="absolute text-muted-foreground pointer-events-none"
             style={{ left: `${(particle.id / fromText.length) * 100}%` }}
-            initial={{ opacity: 1, x: 0, y: 0, scale: 1 }}
+            initial={{ opacity: 0.8, x: 0, y: 0, scale: 1 }}
             animate={{ 
               opacity: 0, 
-              x: particle.x, 
-              y: particle.y, 
-              scale: 0,
-              rotate: Math.random() * 360
+              x: particle.x * 0.6, 
+              y: particle.y * 0.6 - 30, 
+              scale: 0.5,
+              rotate: (Math.random() - 0.5) * 180
             }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
+            transition={{ 
+              duration: 1.2, 
+              ease: [0.25, 0.46, 0.45, 0.94]
+            }}
           >
             {particle.char}
           </motion.span>
