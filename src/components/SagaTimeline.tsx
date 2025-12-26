@@ -1,6 +1,6 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { Swords, Infinity, Hand } from "lucide-react";
+import { Swords, Infinity as InfinityIcon, Hand } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 interface Round {
