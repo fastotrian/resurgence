@@ -92,7 +92,7 @@ const DataTicker = () => {
     <div className="overflow-hidden bg-tactical-blue/10 border-y border-tactical-blue/30 py-2">
       <div className="data-ticker flex gap-8 whitespace-nowrap">
         {[...data, ...data].map((item, i) => (
-          <span key={i} className="font-display text-xs tracking-widest text-tactical-blue/80 flex items-center gap-2">
+          <span key={i} className="font-mono text-xs tracking-widest text-tactical-blue/80 flex items-center gap-2">
             <Signal className="w-3 h-3" />
             {item}
           </span>
@@ -107,6 +107,13 @@ const ShieldCommand = () => {
     <section className="py-24 px-4 relative overflow-hidden snap-section">
       {/* Tactical grid background */}
       <div className="absolute inset-0 tactical-grid" />
+      
+      {/* Moving Scan Line */}
+      <motion.div
+        className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-tactical-blue to-transparent pointer-events-none z-20"
+        animate={{ top: ['0%', '100%'] }}
+        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+      />
       
       {/* Scanline overlay */}
       <div className="absolute inset-0 scanline-effect pointer-events-none opacity-50" />
@@ -155,14 +162,14 @@ const ShieldCommand = () => {
           <DataTicker />
         </motion.div>
 
-        {/* Command Grid - Tactical Style */}
+        {/* Command Grid - Tactical Style with Status Indicators */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
           {commandStructure.map((unit, index) => {
             const Icon = unit.icon;
             return (
               <motion.div
                 key={unit.title}
-                className="glass-card p-6 relative overflow-hidden group border-tactical-blue/20 hover:border-tactical-blue/50 transition-colors"
+                className="glass-card p-6 relative overflow-hidden group border-tactical-blue/20 hover:border-tactical-blue/50 transition-colors backdrop-blur-2xl bg-background/5"
                 initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
@@ -191,9 +198,22 @@ const ShieldCommand = () => {
                   </div>
 
                   <div className="flex-1">
-                    <h3 className="font-display text-lg font-bold text-tactical-blue mb-2">
-                      {unit.title}
-                    </h3>
+                    <div className="flex items-center gap-3 mb-2">
+                      <h3 className="font-display text-lg font-bold text-tactical-blue">
+                        {unit.title}
+                      </h3>
+                      {/* Status indicator */}
+                      <div className="flex items-center gap-1">
+                        <motion.div
+                          className="w-2 h-2 rounded-full bg-tactical-green"
+                          animate={{ opacity: [1, 0.3, 1] }}
+                          transition={{ duration: 1, repeat: Infinity }}
+                        />
+                        <span className="font-mono text-[8px] tracking-widest text-tactical-green">
+                          OPERATIONAL
+                        </span>
+                      </div>
+                    </div>
                     <p className="text-foreground/70 text-sm mb-3">
                       {unit.description}
                     </p>
@@ -212,7 +232,7 @@ const ShieldCommand = () => {
 
         {/* Stats Counter - Control Panel Style */}
         <motion.div
-          className="glass-card p-6 border-tactical-blue/30"
+          className="glass-card p-6 border-tactical-blue/30 backdrop-blur-2xl bg-background/5"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

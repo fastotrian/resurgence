@@ -1,10 +1,30 @@
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, Instagram, Twitter, Linkedin } from "lucide-react";
 import crestLogoDark from "@/assets/crest-logo-dark.png";
+
 const Footer = () => {
   return (
     <footer className="py-16 px-4 relative overflow-hidden border-t border-border">
       <div className="absolute inset-0 topographic-overlay" />
+      
+      {/* CLEARANCE LEVEL Watermark */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+        <span className="font-display text-[120px] md:text-[200px] font-black tracking-widest text-foreground/[0.03] whitespace-nowrap">
+          CLEARANCE LEVEL: OMEGA
+        </span>
+      </div>
+      
+      {/* Tactical Grid */}
+      <div 
+        className="absolute inset-0 opacity-5" 
+        style={{ 
+          backgroundImage: `
+            linear-gradient(hsl(var(--tactical-blue)) 1px, transparent 1px),
+            linear-gradient(90deg, hsl(var(--tactical-blue)) 1px, transparent 1px)
+          `, 
+          backgroundSize: '40px 40px' 
+        }} 
+      />
       
       <div className="container mx-auto relative">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
@@ -56,7 +76,7 @@ const Footer = () => {
             </h4>
             <div className="space-y-4">
               {/* Venue */}
-              <div className="flex items-start gap-3 glass-card p-3 rounded-lg">
+              <div className="flex items-start gap-3 glass-card p-3 rounded-lg backdrop-blur-2xl bg-background/5">
                 <MapPin className="w-4 h-4 text-crest-red mt-0.5" />
                 <div>
                   <span className="font-display text-xs tracking-widest text-muted-foreground block">VENUE</span>
@@ -65,7 +85,7 @@ const Footer = () => {
               </div>
               
               {/* Email */}
-              <div className="flex items-start gap-3 glass-card p-3 rounded-lg">
+              <div className="flex items-start gap-3 glass-card p-3 rounded-lg backdrop-blur-2xl bg-background/5">
                 <Mail className="w-4 h-4 text-crest-yellow mt-0.5" />
                 <div>
                   <span className="font-display text-xs tracking-widest text-muted-foreground block">GMAIL</span>
@@ -76,7 +96,7 @@ const Footer = () => {
               </div>
               
               {/* Phone */}
-              <div className="flex items-start gap-3 glass-card p-3 rounded-lg">
+              <div className="flex items-start gap-3 glass-card p-3 rounded-lg backdrop-blur-2xl bg-background/5">
                 <Phone className="w-4 h-4 text-crest-green mt-0.5" />
                 <div>
                   <span className="font-display text-xs tracking-widest text-muted-foreground block">PHONE</span>
@@ -93,7 +113,7 @@ const Footer = () => {
                 <motion.a
                   key={index}
                   href="#"
-                  className="w-10 h-10 glass-card flex items-center justify-center rounded-lg hover:bg-glass-border transition-colors"
+                  className="w-10 h-10 glass-card flex items-center justify-center rounded-lg hover:bg-glass-border transition-colors backdrop-blur-2xl bg-background/5"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                 >

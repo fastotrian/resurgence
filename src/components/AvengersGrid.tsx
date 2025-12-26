@@ -19,6 +19,8 @@ interface Avenger {
   borderClass: string;
   description: string;
   logo: string;
+  serialCode: string;
+  powerLevel: number;
 }
 
 const avengers: Avenger[] = [
@@ -32,6 +34,8 @@ const avengers: Avenger[] = [
     borderClass: "hover:border-crest-blue",
     description: "The strategic leader who keeps the team aligned and on track.",
     logo: captainAmericaLogo,
+    serialCode: "SHIELD-OS v.7.04 // ID-1941",
+    powerLevel: 85,
   },
   {
     name: "Lead Architect",
@@ -43,6 +47,8 @@ const avengers: Avenger[] = [
     borderClass: "hover:border-crest-red",
     description: "The genius who designs the system's core infrastructure.",
     logo: ironManLogo,
+    serialCode: "STARK-OS v.4.02 // ID-8829",
+    powerLevel: 95,
   },
   {
     name: "The Pitcher",
@@ -54,6 +60,8 @@ const avengers: Avenger[] = [
     borderClass: "hover:border-crest-yellow",
     description: "The powerhouse who delivers electrifying presentations.",
     logo: thorLogo,
+    serialCode: "ASGARD-NET v.9.63 // ID-0000",
+    powerLevel: 100,
   },
   {
     name: "UI/UX Design",
@@ -65,6 +73,8 @@ const avengers: Avenger[] = [
     borderClass: "hover:border-muted-foreground",
     description: "The craftsman who shapes beautiful user experiences.",
     logo: blackWidowLogo,
+    serialCode: "WIDOW-SYS v.2.18 // ID-1984",
+    powerLevel: 80,
   },
   {
     name: "Web Dev",
@@ -76,6 +86,8 @@ const avengers: Avenger[] = [
     borderClass: "hover:border-crest-red",
     description: "The agile developer who crafts pixel-perfect interfaces.",
     logo: spiderManLogo,
+    serialCode: "WEBWARE v.3.16 // ID-2001",
+    powerLevel: 88,
   },
   {
     name: "Data / AI",
@@ -87,8 +99,33 @@ const avengers: Avenger[] = [
     borderClass: "hover:border-crest-green",
     description: "The visionary who harnesses the power of machine learning.",
     logo: doctorStrangeLogo,
+    serialCode: "MYSTIC-AI v.14.00 // ID-0001",
+    powerLevel: 92,
   },
 ];
+
+// Power meter component
+const PowerMeter = ({ level, color }: { level: number; color: string }) => {
+  const segments = 3;
+  const filledSegments = Math.ceil((level / 100) * segments);
+  
+  return (
+    <div className="flex items-center gap-1 mt-3">
+      <span className="font-mono text-[10px] text-muted-foreground mr-2">PWR</span>
+      {[...Array(segments)].map((_, i) => (
+        <motion.div
+          key={i}
+          className={`h-2 w-6 rounded-sm ${i < filledSegments ? color : 'bg-muted/30'}`}
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: i * 0.1 }}
+        />
+      ))}
+      <span className="font-mono text-[10px] text-muted-foreground ml-2">{level}%</span>
+    </div>
+  );
+};
 
 const AvengersGrid = () => {
   return (
@@ -141,7 +178,7 @@ const AvengersGrid = () => {
           {avengers.map((avenger, index) => (
             <motion.div
               key={avenger.name}
-              className={`group relative glass-card p-6 cursor-pointer transition-all duration-500 border-2 border-transparent ${avenger.borderClass}`}
+              className={`group relative glass-card p-6 cursor-pointer transition-all duration-500 border-2 border-transparent ${avenger.borderClass} backdrop-blur-2xl bg-background/5`}
               initial={{ opacity: 0, y: 30, scale: 0.95 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true }}
@@ -150,6 +187,18 @@ const AvengersGrid = () => {
             >
               {/* Glow effect on hover */}
               <div className={`absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${avenger.glowClass} blur-xl -z-10`} />
+              
+              {/* Status Indicator */}
+              <div className="absolute top-3 right-3 flex items-center gap-2">
+                <motion.div
+                  className="w-2 h-2 rounded-full bg-tactical-green"
+                  animate={{ opacity: [1, 0.3, 1] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                />
+                <span className="font-mono text-[8px] tracking-widest text-tactical-green">
+                  OPERATIONAL
+                </span>
+              </div>
               
               {/* Avenger Logo */}
               <motion.div 
@@ -186,9 +235,37 @@ const AvengersGrid = () => {
               <p className="text-sm text-foreground/80 mb-4 text-center">
                 {avenger.description}
               </p>
-              <p className="text-sm italic text-muted-foreground text-center">
+              <p className="text-sm italic text-muted-foreground text-center mb-3">
                 {avenger.catchphrase}
               </p>
+              
+              {/* Power Meter */}
+              <div className="flex justify-center">
+                <PowerMeter 
+                  level={avenger.powerLevel} 
+                  color={avenger.bgClass.replace('/20', '')} 
+                />
+              </div>
+              
+              {/* Digital Signature / Serial */}
+              <div className="mt-4 pt-3 border-t border-muted/20 text-center">
+                <motion.div
+                  className="font-mono text-[9px] tracking-widest text-muted-foreground/60 flex items-center justify-center gap-2"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="w-8 h-3 flex gap-[1px]">
+                    {[...Array(8)].map((_, i) => (
+                      <div 
+                        key={i} 
+                        className={`flex-1 ${Math.random() > 0.5 ? 'bg-muted-foreground/40' : 'bg-transparent'}`}
+                      />
+                    ))}
+                  </div>
+                  {avenger.serialCode}
+                </motion.div>
+              </div>
 
               {/* Corner accents */}
               <div className="absolute top-2 left-2 w-4 h-4 border-l-2 border-t-2 border-tactical-blue/30 opacity-0 group-hover:opacity-100 transition-opacity" />
