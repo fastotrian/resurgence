@@ -1,7 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
-import crestLogo from "@/assets/crest-logo.png";
-
+import crestLogo from "@/assets/crest-logo-dark.png";
 interface LoadingScreenProps {
   onComplete: () => void;
 }

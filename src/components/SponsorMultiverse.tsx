@@ -9,7 +9,7 @@ import thorLogo from "@/assets/thor-logo.png";
 import blackWidowLogo from "@/assets/black-widow-logo.png";
 import ironManLogo from "@/assets/iron-man-logo.png";
 import captainAmericaLogo from "@/assets/captain-america-logo.png";
-
+import campusBlueprint from "@/assets/campus-blueprint.png";
 interface DeploymentZone {
   name: string;
   dimension: string;
@@ -97,27 +97,14 @@ const SponsorMultiverse = () => {
       />
       
       <div className="container mx-auto relative z-10">
-        {/* TOP SECRET Header */}
+        {/* Header */}
         <motion.div
-          className="text-center mb-16"
+          className="text-center mb-12"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          {/* Classified stamp */}
-          <motion.div
-            className="inline-block mb-6"
-            initial={{ scale: 0, rotate: -20 }}
-            whileInView={{ scale: 1, rotate: -3 }}
-            viewport={{ once: true }}
-            transition={{ type: "spring", delay: 0.3 }}
-          >
-            <div className="border-4 border-crest-red px-6 py-2 font-mono text-crest-red text-xl md:text-2xl font-bold tracking-widest transform">
-              TOP SECRET // SHIELD EYES ONLY
-            </div>
-          </motion.div>
-          
           <motion.span 
             className="font-display text-xs tracking-[0.4em] text-tactical-blue mb-4 block"
             initial={{ opacity: 0 }}
@@ -134,6 +121,84 @@ const SponsorMultiverse = () => {
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             Strategic deployment zones for maximum brand visibility across the 600-acre LPU campus.
           </p>
+        </motion.div>
+
+        {/* Hologram Blueprint */}
+        <motion.div
+          className="max-w-4xl mx-auto mb-16 relative"
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="relative p-8 glass-card border border-tactical-blue/30 overflow-hidden">
+            {/* Hologram glow */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-br from-tactical-blue/10 via-transparent to-crest-green/10"
+              animate={{ opacity: [0.3, 0.6, 0.3] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            />
+            
+            {/* Scanlines for hologram effect */}
+            <div 
+              className="absolute inset-0 pointer-events-none opacity-20"
+              style={{
+                background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,200,255,0.1) 2px, rgba(0,200,255,0.1) 4px)'
+              }}
+            />
+            
+            {/* Blueprint Image with hologram effect */}
+            <motion.div
+              className="relative"
+              animate={{ 
+                filter: [
+                  'brightness(1) hue-rotate(0deg)',
+                  'brightness(1.2) hue-rotate(10deg)',
+                  'brightness(0.9) hue-rotate(-5deg)',
+                  'brightness(1) hue-rotate(0deg)'
+                ],
+                opacity: [0.85, 1, 0.9, 0.85]
+              }}
+              transition={{ 
+                duration: 4, 
+                repeat: Infinity, 
+                ease: "easeInOut" 
+              }}
+            >
+              <img 
+                src={campusBlueprint} 
+                alt="LPU Campus Blueprint" 
+                className="w-full h-auto object-contain filter drop-shadow-[0_0_20px_hsl(var(--tactical-blue)/0.5)]"
+                style={{
+                  filter: 'sepia(100%) hue-rotate(160deg) saturate(300%) brightness(0.8)'
+                }}
+              />
+              
+              {/* Pulse overlay */}
+              <motion.div
+                className="absolute inset-0 bg-tactical-blue/10 rounded-lg"
+                animate={{ opacity: [0, 0.2, 0] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              />
+            </motion.div>
+            
+            {/* Corner brackets */}
+            <div className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-tactical-blue" />
+            <div className="absolute top-4 right-4 w-8 h-8 border-t-2 border-r-2 border-tactical-blue" />
+            <div className="absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-tactical-blue" />
+            <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-tactical-blue" />
+            
+            {/* Title */}
+            <motion.div
+              className="absolute bottom-8 left-1/2 -translate-x-1/2 text-center"
+              animate={{ opacity: [0.7, 1, 0.7] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <span className="font-mono text-xs text-tactical-blue tracking-widest bg-background/80 px-4 py-2 rounded">
+                LPU CAMPUS // 600 ACRES // STRATEGIC OVERVIEW
+              </span>
+            </motion.div>
+          </div>
         </motion.div>
 
         {/* Deployment Zones Table */}
@@ -299,13 +364,16 @@ const SponsorMultiverse = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <motion.button
-            className="group px-10 py-4 bg-gradient-to-r from-crest-yellow to-crest-green font-display font-bold text-lg tracking-wider text-background rounded-lg transition-all duration-300"
+          <motion.a
+            href="https://docs.google.com/forms/d/e/1FAIpQLSco9ETN7FLpt2og1G0oD0S-Um8JwC-yqtRdMpK_hai9K9HB6g/viewform?usp=publish-editor"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block px-10 py-4 bg-gradient-to-r from-crest-yellow to-crest-green font-display font-bold text-lg tracking-wider text-background rounded-lg transition-all duration-300"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
           >
             BECOME A STRATEGIC ALLY
-          </motion.button>
+          </motion.a>
           <p className="mt-4 text-sm italic text-muted-foreground">
             Join the alliance. Dominate the campus.
           </p>

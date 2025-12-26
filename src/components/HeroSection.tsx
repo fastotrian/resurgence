@@ -1,11 +1,10 @@
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import heroBg from "@/assets/hero-bg.jpg";
-import crestDarkLogo from "@/assets/crest-dark-logo.jpg";
+import crestDarkLogo from "@/assets/crest-logo-dark.png";
 import GlitchText from "./GlitchText";
 import TechHUD from "./TechHUD";
 import CosmicBackground from "./CosmicBackground";
-
 const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden snap-section">
